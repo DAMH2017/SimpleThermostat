@@ -9,6 +9,8 @@ gradient temperature using gradient table
 
 ## Getting Started
 
+### Download the script
+
 ### Download Clarity CDS (Demo Version)
 
 * Go to DataApex link to register [here](https://www.dataapex.com/product/clarity-demo?language_content_entity=en)
