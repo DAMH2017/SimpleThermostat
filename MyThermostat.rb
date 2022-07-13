@@ -1,4 +1,4 @@
-﻿include UNI
+include UNI
 
 #########################################################################
 # User written helper global variables.
@@ -168,7 +168,8 @@ class Device < DeviceWrapper
 	# Returns serial number string from HW (to comply with CFR21) when 
 	# succeessful otherwise false or nil. If not supported return false or nil.
 	#########################################################################	
-	def CmdGetSN  	
+	def CmdGetSN 
+		#Send a command to get the serial number
 		return false
 	end
 	
@@ -277,8 +278,9 @@ class Device < DeviceWrapper
 	def CmdStopAcquisition
 		@aryTemp=nil
 		@aryTime=nil
-		Monitor().SetDouble("SetTemp",Method().GetDouble("InitTemp"))
 		Monitor().SetRunning(false)
+		SetRequiredTempToHW(Method().GetDouble("InitTemp"))
+		Monitor().SetDouble("SetTemp",Method().GetDouble("InitTemp"))
 		Monitor().Synchronize()
 		return true
 	end	
@@ -356,6 +358,10 @@ class Device < DeviceWrapper
 	# Returns true when successful otherwise false.
 	#########################################################################
 	def CmdTestConnect
+		#if(GetCurrentTempFromHW==false)
+		#	return false
+		#end
+		#May also use CmdGetSN method
 		return true
 	end
 	
@@ -368,6 +374,7 @@ class Device < DeviceWrapper
 	#########################################################################
 	def CmdSendMethod()
 		Monitor().SetReady(false)
+		SetRequiredTempToHW(Method().GetDouble("InitTemp"))
 		Monitor().SetDouble("SetTemp",Method().GetDouble("InitTemp"))
 		Monitor().Synchronize()
 		return true
@@ -409,6 +416,7 @@ class Device < DeviceWrapper
 	def CmdTimer
 		curr_val=Monitor().GetDouble("CurrTemp")
 		set_val=Monitor().GetDouble("SetTemp")
+		#curr_val=GetCurrentTempFromHW
 		if(Monitor().IsRunning()==true)
 			if(Method().GetTableRowCount("TemperatureGradient")>0)
 				SetTemperatureFromGradientTable()
@@ -421,6 +429,7 @@ class Device < DeviceWrapper
 			@timeEq=0.0
 			curr_val<set_val ? curr_val+=rand(0.2..0.5) : curr_val-=rand(0.2..0.5)
 			Monitor().SetDouble("CurrTemp",curr_val)
+			#Monitor().SetDouble("CurrTemp",GetCurrentTempFromHW)
 			Monitor().SetReady(false)
 		else
 			if(@flagEq==true)
@@ -486,6 +495,20 @@ class Device < DeviceWrapper
 	def NotifyChromatogramFileName(chromatogramFileName)
 	end
 	
+	#Set the required temperature, return true, otherwise false
+	def SetRequiredTempToHW(value)
+		#Send a command to set the temperature of the HW to the required one
+		Monitor().SetDouble("SetTemp",value)
+		Monitor().Synchronize()
+		return true
+	end
+	
+	#Get the current temperature of the thermostat return double if ok, otherwise return false
+	def GetCurrentTempFromHW
+		#Send a command to get the current temperature from the HW (let's imagine it returns 50.0)
+		return 50.0
+	end
+	
 	def SetTemperatureFromGradientTable
 		if(Method().GetTableRowCount("TemperatureGradient")==0)
 			return true
@@ -493,6 +516,7 @@ class Device < DeviceWrapper
 		
 		if(@aryTime.length()>0 && GetAcquisitionTime()>=@aryTime[0])
 			Trace("Time exceed the first array index value")
+			SetRequiredTempToHW(aryTemp[0])
 			Monitor().SetDouble("SetTemp",@aryTemp[0])
 			@aryTime.delete_at(0)
 			@aryTemp.delete_at(0)
