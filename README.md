@@ -23,10 +23,18 @@ gradient temperature using gradient table
 
 * Open the Clarity demo version
 * Click on (Configuration) icon, then press (OK) on pop-up window
+![1](https://user-images.githubusercontent.com/25401184/178685655-fe603d0f-bad5-4717-a142-2a81399523aa.jpg)
+
 * Click (Add) button to add the script), from the opened window, choose (UNI Ruby) under (Auxiliary)
+![2](https://user-images.githubusercontent.com/25401184/178685789-5d7ce540-6b5f-4cb6-9cb4-81fd6c22fcff.jpg)
+
 * Load the script, change the thermostat name if you want, then press (OK)
+![3](https://user-images.githubusercontent.com/25401184/178685977-80230158-cabf-47a0-9040-c14874c6706b.jpg)
+
 * Load a script for a detector (ex: DetectorExample.rb) found in Clarity_Demo/Bin/UTILS/Uni_Drivers/EXAMPLES
 * Choose each module, press (Add selected sub-device) to add them to the device used (GC, HPLC,.....)
+![4](https://user-images.githubusercontent.com/25401184/178686101-857f643d-d561-4fb5-ae12-cd8cd628c529.jpg)
+
 * Press (OK) to close
 
 ### Using the virtual thermostat
